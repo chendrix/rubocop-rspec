@@ -2,8 +2,13 @@
 
 require 'spec_helper'
 
-describe RuboCop::Cop::RSpec::ExplicitPredicateMethod do
-  subject(:cop) { described_class.new }
+describe RuboCop::Cop::RSpec::ExplicitPredicateMethod, :config do
+  subject(:cop) { described_class.new(config) }
+  let(:cop_config) do
+    {
+      'IgnoredMethods' => []
+    }
+  end
 
   it 'checks methods that begin with be_' do
     inspect_source(cop, ['expect(blah).to be_successful'])
@@ -12,13 +17,16 @@ describe RuboCop::Cop::RSpec::ExplicitPredicateMethod do
     expect(cop.messages).to eq(['Prefer use of explicit predicate method tests'])
   end
 
-  it 'does not match be_a' do
-    inspect_source(cop, ['expect(blah).to be_a String'])
-    expect(cop.offenses.size).to eq(0)
-  end
+  context 'when you configure the IgnoredMethods to include something found' do
+    let(:cop_config) do
+      {
+        'IgnoredMethods' => %w(be_empty)
+      }
+    end
 
-  it 'does not match be_empty' do
-    inspect_source(cop, ['expect([]).to be_empty'])
-    expect(cop.offenses.size).to eq(0)
+    it 'does not add an offense when it is found' do
+      inspect_source(cop, ['expect([]).to be_empty'])
+      expect(cop.offenses.size).to eq(0)
+    end
   end
 end

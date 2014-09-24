@@ -2,15 +2,19 @@ module RuboCop
   module Cop
     module RSpec
       class ExplicitPredicateMethod < Cop
-        IGNORED_METHODS = [:be_a, :be_empty]
-
         def on_send(node)
-          receiver, method, args = *node
+          _receiver, method, _args = *node
 
           return unless method.to_s.start_with?('be_')
-          return if IGNORED_METHODS.include?(method)
+          return if ignored_methods.include?(method.to_s)
 
           add_offense(node, :expression, 'Prefer use of explicit predicate method tests')
+        end
+
+        private
+
+        def ignored_methods
+          cop_config['IgnoredMethods'] || []
         end
       end
     end

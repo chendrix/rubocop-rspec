@@ -34,3 +34,8 @@ RSpec/FilePath:
   CustomTransform:
     RuboCop: rubocop
     RSpec: rspec
+
+RSpec/ExplicitPredicateMethod:
+  Description: 'Do not use be_x rspec matchers'
+  Enabled: true
+  IgnoredMethods: []
