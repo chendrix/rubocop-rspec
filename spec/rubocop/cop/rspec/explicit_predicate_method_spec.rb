@@ -14,7 +14,7 @@ describe RuboCop::Cop::RSpec::ExplicitPredicateMethod, :config do
     inspect_source(cop, ['expect(blah).to be_successful'])
     expect(cop.offenses.size).to eq(1)
     expect(cop.offenses.map(&:line).sort).to eq([1])
-    expect(cop.messages).to eq(['Prefer use of explicit predicate method tests'])
+    expect(cop.messages).to eq(["Use `expect(object.successful?).to eq true` instead of `expect(object).to be_successful`"])
   end
 
   context 'when you configure the IgnoredMethods to include something found' do
